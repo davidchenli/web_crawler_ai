@@ -19,7 +19,7 @@ def main():
     count = 0
     for x in news_content:
         news = x["content"]
-        summary = ai.content_measure(news)
+        summary = ai.content_measure(news[:1000])
         data_return = json_to_dict(summary)
 
         if type(data_return) is dict:
@@ -45,8 +45,19 @@ def main():
     news_final_df["entity"] = news_final_df["person_or_org"].apply(lambda x: x if x else "NULL")
     news_final_df["concert_related"] = news_final_df["is_concert_related"].astype(bool)
     news_final_df["summary"] = news_final_df["summary"].fillna("NULL")
-    news_final_df.drop(columns=["id", "is_concert_related", "person_or_org"]).to_csv(f"./output/{config.filename}")
-    return news_final_df
+    cols_map = {
+        "title": "新聞標題",
+        "url": "新聞連結",
+        "source": "新聞來源",
+        "summary": "新聞內容摘要",
+        "entity": "實體(人名/團體)",
+        "concert_related": "是否為演唱會"
+    }
+    news_final_df[list(cols_map.keys())].rename(columns=cols_map).to_csv(
+        f"./output/{config.filename}",
+        index=False,
+        encoding="utf-8-sig"
+    )
 
 
 if __name__ == '__main__':

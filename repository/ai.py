@@ -3,13 +3,10 @@ import time
 from google import genai
 
 
-# 初始化客戶端
-
-
 class Gemini:
     def __init__(self, api_key):
         self.client = genai.Client(api_key=api_key)
-        self.model_name = 'gemma-3-1b-it'
+        self.model_name = 'gemma-3-27b-it'
 
     def ask_gemini(self, prompt_text):
         response = self.client.models.generate_content(
